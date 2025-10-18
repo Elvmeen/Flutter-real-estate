@@ -4,6 +4,11 @@ import 'package:flutter_real_estate/ui/components/strings.dart';
 import 'package:flutter_real_estate/ui/components/top_app_bar.dart';
 import 'package:flutter_real_estate/ui/screens/about_screen.dart';
 import 'package:flutter_real_estate/ui/screens/overview_screen.dart';
+import 'package:flutter_real_estate/ui/screens/advanced_search_screen.dart';
+import 'package:flutter_real_estate/ui/screens/favorites_screen.dart';
+import 'package:flutter_real_estate/ui/screens/alerts_screen.dart';
+import 'package:flutter_real_estate/ui/screens/agent_directory_screen.dart';
+import 'package:flutter_real_estate/ui/screens/mortgage_calculator_screen.dart';
 import 'package:flutter_real_estate/ui/theme/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
@@ -39,7 +44,21 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends ConsumerWidget {
-  final List<Widget> screens = [OverviewScreen(), AboutScreen()];
+  final List<Widget> screens = [
+    OverviewScreen(), 
+    AdvancedSearchScreen(),
+    FavoritesScreen(),
+    AlertsScreen(),
+    AgentDirectoryScreen(),
+  ];
+
+  final List<String> appBarTitles = [
+    'DreamHome',
+    'Search Properties',
+    'My Favorites',
+    'Property Alerts',
+    'Find an Agent',
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +66,7 @@ class HomePage extends ConsumerWidget {
     final selectedIndex = ref.watch(selectedIndexProvider);
 
     return Scaffold(
-        appBar: TopAppBar(title: Strings.appBarTitles[selectedIndex]),
+        appBar: TopAppBar(title: appBarTitles[selectedIndex]),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -58,6 +77,20 @@ class HomePage extends ConsumerWidget {
             ],
           ),
         ),
-        bottomNavigationBar: BottomAppBarMenu());
+        bottomNavigationBar: BottomAppBarMenu(),
+        floatingActionButton: selectedIndex == 0 
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MortgageCalculatorScreen(),
+                    ),
+                  );
+                },
+                backgroundColor: AppColors.strong,
+                child: const Icon(Icons.calculate, color: AppColors.white),
+              )
+            : null);
   }
 }
