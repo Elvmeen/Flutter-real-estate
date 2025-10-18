@@ -1,7 +1,13 @@
 class Strings {
   Strings._();
 
-  static const appBarTitles = ['DTT REAL ESTATE', 'ABOUT'];
+  static const appBarTitles = [
+    'DTT REAL ESTATE',
+    'FAVORITES',
+    'AGENTS',
+    'MORTGAGE',
+    'ABOUT'
+  ];
 
   static const searchBarHint = 'Search for a home';
 
@@ -25,4 +31,25 @@ class Strings {
   static const sortText = 'Sort by:';
 
   static const reloadText = 'Retry loading';
+
+  // Favorites
+  static const favoritesEmpty = 'No favorites yet';
+
+  // Agents
+  static const agentsTitle = 'Agents';
+  static const agentsSearchHint = 'Search agents by name or city';
+
+  // Mortgage
+  static const mortgageTitle = 'Mortgage Calculator';
+  static const mortgageMonthlyPayment = 'Estimated monthly payment';
+  static const mortgageClosingCosts = 'Estimated closing costs';
+  static const mortgageCalculate = 'Calculate';
+  static const mortgagePrice = 'Home price';
+  static const mortgageDownPayment = 'Down payment (%)';
+  static const mortgageInterestRate = 'Interest rate (%)';
+  static const mortgageTermYears = 'Term (years)';
+  static const openMortgageCalculator = 'Mortgage calculator';
+
+  // Alerts
+  static const newListingsAvailable = 'New listings available';
 }

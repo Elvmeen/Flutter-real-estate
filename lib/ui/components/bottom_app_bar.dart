@@ -17,6 +17,18 @@ class BottomAppBarMenu extends ConsumerWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.people),
+          label: 'Agents',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.calculate),
+          label: 'Mortgage',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.info),
           label: 'Info',
         ),

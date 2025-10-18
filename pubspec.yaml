@@ -24,6 +24,7 @@ dependencies:
   location: ^5.0.3
   geolocator: ^10.0.1
   flutter_native_splash: ^2.3.2
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -41,6 +42,7 @@ flutter:
     - assets/images/dtt_banner/xhdpi/
     - assets/images/dtt_banner/xxhdpi/
     - assets/images/dtt_banner/xxxhdpi/
+    - assets/agents.json
 
   fonts:
     - family: GothamSSm

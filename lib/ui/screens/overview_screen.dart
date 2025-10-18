@@ -9,6 +9,8 @@ import 'package:sizer/sizer.dart';
 import '../../application/list_houses_provider.dart';
 import '../../application/selected_sort_provider.dart';
 import '../../application/text_searchbar_provider.dart';
+import '../../application/advanced_filter_provider.dart';
+import '../../application/alerts_provider.dart';
 import '../components/filter_card.dart';
 import '../theme/colors.dart';
 
@@ -25,6 +27,25 @@ class OverviewScreen extends ConsumerWidget {
     final textSearchBarIsEmptyProvider = StateProvider<bool>((ref) => true);
 
     return Column(children: [
+      Consumer(builder: (context, ref, _) {
+        final show = ref.watch(newListingsAlertProvider);
+        if (!show) return const SizedBox.shrink();
+        return Container(
+          color: Colors.amber.shade200,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            children: [
+              const Icon(Icons.new_releases),
+              const SizedBox(width: 8),
+              const Expanded(child: Text(Strings.newListingsAvailable)),
+              TextButton(
+                onPressed: () => ref.read(newListingsAlertProvider.notifier).dismiss(),
+                child: const Text('Dismiss'),
+              ),
+            ],
+          ),
+        );
+      }),
       // Search bar section
       Padding(
         padding: EdgeInsets.only(top: 0.75.h, bottom: 1.5.h, right: 4.2.w, left: 4.2.w),
@@ -107,6 +128,11 @@ class OverviewScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              IconButton(
+                tooltip: 'Advanced filters',
+                icon: const Icon(Icons.tune),
+                onPressed: () => _openAdvancedFilters(context, ref),
+              )
             ],
           ),
         ),
@@ -116,12 +142,120 @@ class OverviewScreen extends ConsumerWidget {
           // This is set to `false` to make sure the loading state is shown when
           // the data is refreshed or tried to load again
           skipLoadingOnRefresh: false,
-          data: (houses) => ListCardHouse(houseList: houses),
+          data: (houses) {
+            // Notify alert system for new data count
+            ref.read(newListingsAlertProvider.notifier).checkForNewListings(houses.length);
+            final filter = ref.watch(advancedFilterProvider);
+            final filtered = filter.isActive
+                ? houses.where((h) {
+                    if (filter.minPrice != null && h.price < filter.minPrice!) return false;
+                    if (filter.maxPrice != null && h.price > filter.maxPrice!) return false;
+                    if (filter.minBedrooms != null && h.bedrooms < filter.minBedrooms!) {
+                      return false;
+                    }
+                    if (filter.minBathrooms != null && h.bathrooms < filter.minBathrooms!) {
+                      return false;
+                    }
+                    if (filter.maxDistanceKm != null &&
+                        h.distance > (filter.maxDistanceKm!)) return false;
+                    return true;
+                  }).toList()
+                : houses;
+            return ListCardHouse(houseList: filtered);
+          },
           loading: () => Center(child: CircularProgressIndicator()),
           error: (e, __) => Center(child: ErrorState()),
         ),
       ),
     ]);
+  }
+  void _openAdvancedFilters(BuildContext context, WidgetRef ref) {
+    final current = ref.read(advancedFilterProvider);
+    final minPriceController =
+        TextEditingController(text: current.minPrice?.toString() ?? '');
+    final maxPriceController =
+        TextEditingController(text: current.maxPrice?.toString() ?? '');
+    final minBedsController =
+        TextEditingController(text: current.minBedrooms?.toString() ?? '');
+    final minBathsController =
+        TextEditingController(text: current.minBathrooms?.toString() ?? '');
+    final maxDistanceController =
+        TextEditingController(text: current.maxDistanceKm?.toString() ?? '');
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+              left: 16,
+              right: 16,
+              top: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: const [
+                  Text('Advanced Filters', style: AppTypography.title02),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _numField('Min price', minPriceController),
+              _numField('Max price', maxPriceController),
+              _numField('Min bedrooms', minBedsController),
+              _numField('Min bathrooms', minBathsController),
+              _numField('Max distance (km)', maxDistanceController),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        ref.read(advancedFilterProvider.notifier).clear();
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('Clear'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final f = AdvancedFilter(
+                          minPrice: int.tryParse(minPriceController.text),
+                          maxPrice: int.tryParse(maxPriceController.text),
+                          minBedrooms: int.tryParse(minBedsController.text),
+                          minBathrooms: int.tryParse(minBathsController.text),
+                          maxDistanceKm: double.tryParse(maxDistanceController.text),
+                        );
+                        ref.read(advancedFilterProvider.notifier).apply(f);
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('Apply'),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _numField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
+        controller: controller,
+      ),
+    );
   }
 }
 

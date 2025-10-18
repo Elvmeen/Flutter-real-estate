@@ -9,12 +9,14 @@ import 'package:flutter_real_estate/ui/theme/type.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/constants.dart';
 import '../theme/colors.dart';
+import '../../application/favorites_provider.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends ConsumerWidget {
   // Constructor to initialize the DetailScreen widget with the selected property.
   DetailScreen({Key? key, required this.selectedItem}) : super(key: key);
 
@@ -36,7 +38,7 @@ class DetailScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: TopAppBar(
@@ -82,6 +84,23 @@ class DetailScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SizedBox.shrink(),
+                              IconButton(
+                                icon: Icon(
+                                  ref.watch(favoriteHousesProvider).contains(selectedItem.id)
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: AppColors.dttRed,
+                                ),
+                                onPressed: () => ref
+                                    .read(favoriteHousesProvider.notifier)
+                                    .toggleFavorite(selectedItem.id),
+                              )
+                            ],
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -191,6 +210,17 @@ class DetailScreen extends StatelessWidget {
                                           selectedItem.longitude.toDouble());
                                     }),
                               },
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('/mortgage');
+                              },
+                              icon: const Icon(Icons.calculate),
+                              label: const Text(Strings.openMortgageCalculator),
                             ),
                           ),
                         ],

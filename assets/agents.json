@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "name": "Alex Johnson",
+    "city": "Amsterdam",
+    "email": "alex.johnson@example.com",
+    "phone": "+31 20 123 4567",
+    "bio": "Experienced agent specializing in city apartments.",
+    "avatarUrl": null
+  },
+  {
+    "id": 2,
+    "name": "Brittany Smith",
+    "city": "Rotterdam",
+    "email": "brittany.smith@example.com",
+    "phone": "+31 10 987 6543",
+    "bio": "Focused on family homes and suburbs.",
+    "avatarUrl": null
+  },
+  {
+    "id": 3,
+    "name": "Carlos Garcia",
+    "city": "Utrecht",
+    "email": "carlos.garcia@example.com",
+    "phone": "+31 30 222 3344",
+    "bio": "Luxury listings and investments.",
+    "avatarUrl": null
+  }
+]
