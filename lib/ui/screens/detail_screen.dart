@@ -9,12 +9,14 @@ import 'package:flutter_real_estate/ui/theme/type.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../application/favorites_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/constants.dart';
 import '../theme/colors.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends ConsumerWidget {
   // Constructor to initialize the DetailScreen widget with the selected property.
   DetailScreen({Key? key, required this.selectedItem}) : super(key: key);
 
@@ -36,7 +38,8 @@ class DetailScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFav = ref.watch(favoritesProvider).contains(selectedItem.id);
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: TopAppBar(
@@ -49,20 +52,25 @@ class DetailScreen extends StatelessWidget {
               // Display the property image with a hero tag.
               SizedBox(
                 height: MediaQuery.of(context).orientation == Orientation.portrait ? 250 : 200,
-                child: SingleChildScrollView(
-                  child: Hero(
-                    tag: selectedItem.id,
-                    child: CachedNetworkImage(
-                      imageUrl: Constants.baseAPIUrl + selectedItem.image,
-                      fit: BoxFit.contain,
-                      // Placeholder for the image while loading.
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
+                child: PageView(
+                  children: [
+                    Hero(
+                      tag: selectedItem.id,
+                      child: CachedNetworkImage(
+                        imageUrl: Constants.baseAPIUrl + selectedItem.image,
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
-                      // Widget displayed when an error occurs while loading the image.
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
                     ),
-                  ),
+                    for (final url in (selectedItem.gallery ?? const <String>[]))
+                      CachedNetworkImage(
+                        imageUrl: Constants.baseAPIUrl + url,
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      ),
+                  ],
                 ),
               ),
               Expanded(
@@ -148,14 +156,20 @@ class DetailScreen extends StatelessWidget {
                                     style: AppTypography.detail,
                                   ),
                                 ),
+                                IconButton(
+                                  icon: Icon(
+                                    isFav ? Icons.favorite : Icons.favorite_border,
+                                    color: isFav ? Colors.red : AppColors.medium,
+                                  ),
+                                  onPressed: () async {
+                                    await ref.read(favoritesProvider.notifier).toggle(selectedItem.id);
+                                  },
+                                ),
                               ]),
                             ],
                           ),
                           SizedBox(height: 4.h),
-                          const Text(
-                            "Description",
-                            style: AppTypography.title02,
-                          ),
+                          const Text("Description", style: AppTypography.title02),
                           SizedBox(height: 2.h),
                           // Display the property description.
                           Text(
@@ -163,10 +177,17 @@ class DetailScreen extends StatelessWidget {
                             style: AppTypography.body,
                           ),
                           SizedBox(height: 2.h),
-                          const Text(
-                            "Location",
-                            style: AppTypography.title02,
-                          ),
+                          const Text("Location", style: AppTypography.title02),
+                          SizedBox(height: 1.h),
+                          if (selectedItem.videoUrl != null)
+                            TextButton.icon(
+                              onPressed: () async {
+                                final uri = Uri.parse(selectedItem.videoUrl!);
+                                await launchUrl(uri);
+                              },
+                              icon: const Icon(Icons.play_circle),
+                              label: const Text('Watch virtual tour'),
+                            ),
                           SizedBox(height: 2.h),
                           SizedBox(
                             height: 34.h,

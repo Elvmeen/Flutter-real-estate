@@ -1,9 +1,17 @@
 class Strings {
   Strings._();
 
-  static const appBarTitles = ['DTT REAL ESTATE', 'ABOUT'];
+  static const appBarTitles = [
+    'DreamHome',
+    'Favorites',
+    'Agents',
+    'Messages',
+    'Mortgage Calculator'
+  ];
 
   static const searchBarHint = 'Search for a home';
+  static const alertsEnabled = 'Alerts enabled for new listings';
+  static const alertsDisabled = 'Alerts disabled';
 
   static const aboutText =
       'Hello, I am Stefan de Kraker, a recently graduated Technical Informatics student with a great passion for hardware and software.'

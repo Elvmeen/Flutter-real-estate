@@ -3,12 +3,14 @@ class HouseData {
   final int id;
   final int price;
   final String image;
+  final List<String>? gallery;
   final String zip;
   final int bathrooms;
   final int bedrooms;
   final int size;
   final String city;
   final String description;
+  final String? videoUrl;
   final int latitude;
   final int longitude;
   final double distance;
@@ -17,12 +19,14 @@ class HouseData {
     required this.id,
     required this.price,
     required this.image,
+    this.gallery,
     required this.zip,
     required this.bathrooms,
     required this.bedrooms,
     required this.size,
     required this.city,
     required this.description,
+    this.videoUrl,
     required this.latitude,
     required this.longitude,
     required this.distance,
@@ -33,12 +37,14 @@ class HouseData {
       id: json['id'],
       price: json['price'],
       image: json['image'],
+      gallery: (json['gallery'] as List?)?.map((e) => e.toString()).toList(),
       zip: json['zip'],
       bathrooms: json['bathrooms'],
       bedrooms: json['bedrooms'],
       size: json['size'],
       city: json['city'],
       description: json['description'],
+      videoUrl: json['videoUrl'],
       latitude: json['latitude'],
       longitude: json['longitude'],
       distance: 0.0

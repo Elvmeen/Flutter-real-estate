@@ -11,6 +11,8 @@ import '../../application/selected_sort_provider.dart';
 import '../../application/text_searchbar_provider.dart';
 import '../components/filter_card.dart';
 import '../theme/colors.dart';
+import 'advanced_search_sheet.dart';
+import '../../application/alerts_provider.dart';
 
 class OverviewScreen extends ConsumerWidget {
   // Controller for the search bar input field.
@@ -107,6 +109,20 @@ class OverviewScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              IconButton(
+                tooltip: 'Advanced search',
+                onPressed: () async {
+                  await showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => const DraggableScrollableSheet(
+                      expand: false,
+                      builder: (context, controller) => AdvancedSearchSheet(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.tune, color: AppColors.medium),
+              )
             ],
           ),
         ),
@@ -121,6 +137,22 @@ class OverviewScreen extends ConsumerWidget {
           error: (e, __) => Center(child: ErrorState()),
         ),
       ),
+      Consumer(builder: (context, ref, _) {
+        final alerts = ref.watch(alertsProvider);
+        return Padding(
+          padding: EdgeInsets.only(bottom: 8, left: 16, right: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(alerts ? Strings.alertsEnabled : Strings.alertsDisabled),
+              Switch(
+                value: alerts,
+                onChanged: (_) => ref.read(alertsProvider.notifier).toggle(),
+              )
+            ],
+          ),
+        );
+      })
     ]);
   }
 }

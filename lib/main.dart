@@ -3,6 +3,10 @@ import 'package:flutter_real_estate/ui/components/bottom_app_bar.dart';
 import 'package:flutter_real_estate/ui/components/strings.dart';
 import 'package:flutter_real_estate/ui/components/top_app_bar.dart';
 import 'package:flutter_real_estate/ui/screens/about_screen.dart';
+import 'package:flutter_real_estate/ui/screens/agents_screen.dart';
+import 'package:flutter_real_estate/ui/screens/favorites_screen.dart';
+import 'package:flutter_real_estate/ui/screens/messages_screen.dart';
+import 'package:flutter_real_estate/ui/screens/mortgage_screen.dart';
 import 'package:flutter_real_estate/ui/screens/overview_screen.dart';
 import 'package:flutter_real_estate/ui/theme/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,7 +43,13 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends ConsumerWidget {
-  final List<Widget> screens = [OverviewScreen(), AboutScreen()];
+  final List<Widget> screens = [
+    OverviewScreen(),
+    FavoritesScreen(),
+    AgentsScreen(),
+    MessagesScreen(),
+    const MortgageScreen(),
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

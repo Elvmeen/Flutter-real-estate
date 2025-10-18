@@ -11,15 +11,12 @@ class BottomAppBarMenu extends ConsumerWidget {
 
     return BottomNavigationBar(
       items: [
-        // Icons in the bottomBar
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.info),
-          label: 'Info',
-        ),
+        // Icons in the bottom bar
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
+        BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Agents'),
+        BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
+        BottomNavigationBarItem(icon: Icon(Icons.calculate), label: 'Mortgage'),
       ],
       // Get index from the provider
       currentIndex: selectedIndex,

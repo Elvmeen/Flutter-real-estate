@@ -5,6 +5,7 @@ import '../../application/location_permissions_provider.dart';
 import '../../application/selected_sort_provider.dart';
 import '../../application/text_searchbar_provider.dart';
 import '../../models/house_model.dart';
+import '../screens/advanced_search_sheet.dart';
 import '../../models/sort_model.dart';
 import 'card_house.dart';
 import 'empty_list_warning.dart';
@@ -59,6 +60,8 @@ class ListCardHouse extends ConsumerWidget {
     final searchText = ref.watch(textSearchBarProvider);
     final sortOrder = ref.watch(selectedSortProvider);
 
+    final filters = ref.watch(searchFiltersProvider);
+
     return FutureBuilder<List<HouseData>>(
       future: filterHouseList(searchText),
       builder: (context, snapshot) {
@@ -72,6 +75,16 @@ class ListCardHouse extends ConsumerWidget {
           return const EmptyListWarning();
         } else {
           List<HouseData> filteredHouseList = snapshot.data!;
+
+          // Apply advanced filters
+          filteredHouseList = filteredHouseList.where((h) {
+            final priceOk = h.price >= filters.price.start && h.price <= filters.price.end;
+            final bedsOk = h.bedrooms >= filters.minBeds;
+            final bathsOk = h.bathrooms >= filters.minBaths;
+            final sizeOk = h.size >= filters.size.start && h.size <= filters.size.end;
+            final distanceOk = h.distance == 0.0 || h.distance <= filters.maxDistanceKm;
+            return priceOk && bedsOk && bathsOk && sizeOk && distanceOk;
+          }).toList();
 
           // Sort the filtered house list based on the selected sort order.
           filteredHouseList.sort((a, b) {

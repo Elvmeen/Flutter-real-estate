@@ -4,19 +4,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/house_model.dart';
+import '../../application/favorites_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../utils/constants.dart';
 import '../screens/detail_screen.dart';
 import '../theme/colors.dart';
 import '../theme/type.dart';
 
-class CardHouse extends StatelessWidget {
+class CardHouse extends ConsumerWidget {
   const CardHouse({required this.house, required this.showDistance});
 
   final HouseData house;
   final bool? showDistance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoritesProvider);
+    final isFav = favorites.contains(house.id);
     return GestureDetector(
       onTap: () {
         // Navigate to the DetailScreen when the card is tapped.
@@ -137,7 +141,15 @@ class CardHouse extends StatelessWidget {
                               '${house.distance}km',
                               style: AppTypography.detail,
                             ),
-                          )
+                          ),
+                          const SizedBox(width: 8.0),
+                          IconButton(
+                            icon: Icon(isFav ? Icons.favorite : Icons.favorite_border,
+                                color: isFav ? Colors.red : AppColors.medium),
+                            onPressed: () {
+                              ref.read(favoritesProvider.notifier).toggle(house.id);
+                            },
+                          ),
                         ],
                       ),
                     ],
