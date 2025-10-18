@@ -1,5 +1,5 @@
-name: flutter_real_estate
-description: Flutter DTT real estate assessment project
+name: dreamhome_real_estate
+description: DreamHome - Your comprehensive real estate marketplace
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -24,6 +24,21 @@ dependencies:
   location: ^5.0.3
   geolocator: ^10.0.1
   flutter_native_splash: ^2.3.2
+  # New dependencies for DreamHome features
+  shared_preferences: ^2.2.2
+  video_player: ^2.8.1
+  photo_view: ^0.14.0
+  carousel_slider: ^4.2.1
+  flutter_local_notifications: ^16.3.0
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  intl: ^0.19.0
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  image_picker: ^1.0.4
+  permission_handler: ^11.1.0
 
 dev_dependencies:
   flutter_test:
