@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_real_estate/application/favorites_provider.dart';
 import 'package:flutter_real_estate/models/house_model.dart';
 import 'package:flutter_real_estate/ui/components/strings.dart';
 import 'package:flutter_real_estate/ui/components/top_app_bar.dart';
 import 'package:flutter_real_estate/ui/theme/type.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../utils/constants.dart';
 import '../theme/colors.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends ConsumerWidget {
   // Constructor to initialize the DetailScreen widget with the selected property.
   DetailScreen({Key? key, required this.selectedItem}) : super(key: key);
 
@@ -36,11 +38,34 @@ class DetailScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoritesNotifier = ref.watch(favoritesProvider.notifier);
+    final isFavorite = favoritesNotifier.isFavorite(selectedItem.id);
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: TopAppBar(
           title: '',
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            favoritesNotifier.toggleFavorite(selectedItem.id);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  isFavorite
+                      ? 'Removed from favorites'
+                      : 'Added to favorites',
+                ),
+                duration: Duration(seconds: 1),
+              ),
+            );
+          },
+          backgroundColor: AppColors.strong,
+          child: Icon(
+            isFavorite ? Icons.favorite : Icons.favorite_border,
+            color: AppColors.white,
+          ),
         ),
         body: Stack(children: [
           Column(
