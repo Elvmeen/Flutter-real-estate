@@ -1,7 +1,14 @@
 class Strings {
   Strings._();
 
-  static const appBarTitles = ['DTT REAL ESTATE', 'ABOUT'];
+  static const appBarTitles = [
+    'DTT REAL ESTATE',
+    'FAVORITES',
+    'AGENTS',
+    'MESSAGES',
+    'MORTGAGE CALCULATOR',
+    'ABOUT'
+  ];
 
   static const searchBarHint = 'Search for a home';
 
