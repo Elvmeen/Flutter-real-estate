@@ -1,16 +1,15 @@
 class Strings {
   Strings._();
 
-  static const appBarTitles = ['DTT REAL ESTATE', 'ABOUT'];
+  static const appBarTitles = ['DREAMHOME', 'AGENTS', 'FAVORITES', 'MESSAGES', 'CALCULATOR', 'ABOUT'];
 
-  static const searchBarHint = 'Search for a home';
+  static const searchBarHint = 'Search for your dream home';
 
   static const aboutText =
-      'Hello, I am Stefan de Kraker, a recently graduated Technical Informatics student with a great passion for hardware and software.'
-      '\n\nDuring my studie I took a minor in mobile application development. Since then, my love and passion for mobile app development has only grown.'
-      '\n\nAlthough developing mobile applications fell outside my regular course of study, I was determined to master new techniques and concepts. I hope my determination comes through in this app, because I haven\'t worked with Flutter before.'
-      '\n\nI hope that DTT can look past this and give me a chance to become a top Flutter developer and thus further strengthen the DTT team.'
-      '\n\nPlease also take a look at my Github for my personal projects such as my smartwatch app and LinkedIn for more information about my background.';
+      'DreamHome is your comprehensive real estate marketplace, designed to simplify the home buying and selling process.'
+      '\n\nOur platform connects buyers, sellers, and real estate agents in one seamless experience. Whether you\'re looking for your first home, investment property, or dream house, DreamHome provides all the tools you need.'
+      '\n\nFeatures include advanced property search, agent directory, messaging system, favorites and alerts, mortgage calculator, and much more.'
+      '\n\nFind your dream home today with DreamHome - where every house becomes a possibility.';
 
   static const mapsText = 'Location of house';
 
