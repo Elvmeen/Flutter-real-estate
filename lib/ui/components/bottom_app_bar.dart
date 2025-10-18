@@ -10,26 +10,36 @@ class BottomAppBarMenu extends ConsumerWidget {
     final selectedIndex = ref.watch(selectedIndexProvider);
 
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       items: [
-        // Icons in the bottomBar
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.info),
-          label: 'Info',
+          icon: Icon(Icons.search),
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.notifications),
+          label: 'Alerts',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Agents',
         ),
       ],
-      // Get index from the provider
       currentIndex: selectedIndex,
       backgroundColor: AppColors.white,
       selectedItemColor: AppColors.strong,
       unselectedItemColor: AppColors.light,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
       onTap: (index) {
-        // Change the index in the provider
         ref.read(selectedIndexProvider.notifier).state = index;
       },
     );

@@ -10,6 +10,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../utils/constants.dart';
 import '../theme/colors.dart';

@@ -2,28 +2,32 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/house_model.dart';
 import '../../utils/constants.dart';
-import '../screens/detail_screen.dart';
+import '../screens/enhanced_detail_screen.dart';
 import '../theme/colors.dart';
 import '../theme/type.dart';
+import '../screens/favorites_screen.dart';
 
-class CardHouse extends StatelessWidget {
+class CardHouse extends ConsumerWidget {
   const CardHouse({required this.house, required this.showDistance});
 
   final HouseData house;
   final bool? showDistance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorite = ref.watch(favoritesProvider).any((p) => p.id == house.id);
+    
     return GestureDetector(
       onTap: () {
-        // Navigate to the DetailScreen when the card is tapped.
+        // Navigate to the EnhancedDetailScreen when the card is tapped.
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => DetailScreen(selectedItem: house),
+            pageBuilder: (context, animation1, animation2) => EnhancedDetailScreen(selectedItem: house),
           ),
         );
       },
@@ -137,7 +141,19 @@ class CardHouse extends StatelessWidget {
                               '${house.distance}km',
                               style: AppTypography.detail,
                             ),
-                          )
+                          ),
+                          const Spacer(),
+                          // Favorite button
+                          IconButton(
+                            onPressed: () {
+                              ref.read(favoritesProvider.notifier).toggleFavorite(house);
+                            },
+                            icon: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              color: isFavorite ? Colors.red : AppColors.medium,
+                              size: 4.w,
+                            ),
+                          ),
                         ],
                       ),
                     ],
