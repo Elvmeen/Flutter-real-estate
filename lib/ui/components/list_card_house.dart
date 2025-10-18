@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/location_permissions_provider.dart';
+import '../../application/filters_provider.dart';
 import '../../application/selected_sort_provider.dart';
 import '../../application/text_searchbar_provider.dart';
 import '../../models/house_model.dart';
@@ -57,6 +58,7 @@ class ListCardHouse extends ConsumerWidget {
     // Get information from various providers.
     final showDistance = ref.watch(locationPermissionProvider);
     final searchText = ref.watch(textSearchBarProvider);
+    final filters = ref.watch(filtersSummaryProvider);
     final sortOrder = ref.watch(selectedSortProvider);
 
     return FutureBuilder<List<HouseData>>(
@@ -72,6 +74,13 @@ class ListCardHouse extends ConsumerWidget {
           return const EmptyListWarning();
         } else {
           List<HouseData> filteredHouseList = snapshot.data!;
+          // Apply advanced filters
+          filteredHouseList = filteredHouseList.where((h) {
+            final withinPrice = h.price >= filters.minPrice && h.price <= filters.maxPrice;
+            final meetsBeds = h.bedrooms >= filters.minBeds;
+            final meetsBaths = h.bathrooms >= filters.minBaths;
+            return withinPrice && meetsBeds && meetsBaths;
+          }).toList();
 
           // Sort the filtered house list based on the selected sort order.
           filteredHouseList.sort((a, b) {

@@ -4,19 +4,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/house_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../application/favorites_provider.dart';
 import '../../utils/constants.dart';
 import '../screens/detail_screen.dart';
 import '../theme/colors.dart';
 import '../theme/type.dart';
 
-class CardHouse extends StatelessWidget {
+class CardHouse extends ConsumerWidget {
   const CardHouse({required this.house, required this.showDistance});
 
   final HouseData house;
   final bool? showDistance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoritesProvider);
+    final isFav = favorites.contains(house.id);
     return GestureDetector(
       onTap: () {
         // Navigate to the DetailScreen when the card is tapped.
@@ -66,9 +70,20 @@ class CardHouse extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Display the house price with commas.
-                      Text(
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
                         '\$${house.price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
                         style: AppTypography.title02,
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: isFav ? 'Remove favorite' : 'Add favorite',
+                            onPressed: () => ref.read(favoritesProvider.notifier).toggle(house.id),
+                            icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: isFav ? Colors.red : AppColors.medium),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 3.0),
                       // Display the house zip code and city.
